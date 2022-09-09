@@ -8231,25 +8231,6 @@
                 }
             }));
         }
-        var shareButton = document.getElementById("share-button");
-        let thisUrl = window.location.href;
-        let thisTitle = document.title;
-        shareButton.addEventListener("click", (function() {
-            if (navigator.share) navigator.share({
-                title: thisTitle,
-                url: thisUrl
-            }).then((function() {
-                console.log("Shareing successfull");
-            })).catch((function() {
-                console.log("Sharing failed");
-            })); else {
-                if (shareButton.closest(".share-open")) {
-                    shareButton.parentElement.classList.remove("share-open");
-                    return;
-                }
-                shareButton.parentElement.classList.add("share-open");
-            }
-        }));
         function isWebp() {
             function testWebP(callback) {
                 let webP = new Image;
