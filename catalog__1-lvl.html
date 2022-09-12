@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<meta name="format-detection" content="telephone=no">
 	<!-- <style>body{opacity: 0;}</style> -->
-	<link rel="stylesheet" href="css/style.min.css?_v=20220909193750">
+	<link rel="stylesheet" href="css/style.min.css?_v=20220912234305">
 	<link rel="shortcut icon" href="favicon.ico">
 	<!-- <meta name="robots" content="noindex, nofollow"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -144,7 +144,7 @@
 								<use xlink:href="img/icons/icons.svg#svg-cabinet"></use>
 							</svg>
 						</a>
-						<a href="" class="right-menu__link">
+						<a href="" class="right-menu__link" data-popup="#basket">
 							<span class="right-menu__count">3</span>
 							<svg class="right-menu__svg">
 								<use xlink:href="img/icons/icons.svg#svg-basket"></use>
@@ -1707,22 +1707,29 @@
 			</div>
 		</div>
 	</div>
-	<div id="search" aria-hidden="true" class="popup">
+	<div id="basket" aria-hidden="true" class="popup">
 		<div class="popup__wrapper">
 			<div class="popup__content">
-				<button data-close type="button" class="popup__close">
-					<svg class="popup__close-svg">
-						<use xlink:href="img/icons/icons.svg#svg-icon-close-modal"></use>
+				<div class="popup__header">
+					<div class="popup__title">Корзина</div>
+					<button data-close type="button" class="popup__close">
+						<svg class="popup__close-svg">
+							<use xlink:href="img/icons/icons.svg#svg-icon-close-modal"></use>
+						</svg>
+					</button>
+				</div>
+				<div class="basket basket_empty">
+					<svg class="basket__svg">
+						<use xlink:href="img/icons/icons.svg#svg-basket-empty"></use>
 					</svg>
-				</button>
-				<div class="search-res">
-
+					<p class="basket__text">В корзине
+						пока ничего нет</p>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js?_v=20220909193750" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-	<script src="js/app.min.js?_v=20220909193750"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js?_v=20220912234305" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script src="js/app.min.js?_v=20220912234305"></script>
 </body>
 
 </html>
