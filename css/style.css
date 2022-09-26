@@ -5371,13 +5371,13 @@ body::after {
   padding: 0;
 }
 
-.order {
+.orders__list .order {
   background-color: #FBF9F6;
   padding: 8px;
   position: relative;
 }
 
-.order__header {
+.orders__list .order__header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -5392,7 +5392,7 @@ body::after {
   padding: 20px 9px;
 }
 
-.order__title {
+.orders__list .order__title {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -5404,27 +5404,27 @@ body::after {
   padding-left: 5rem;
 }
 
-.order__number {
+.orders__list .order__number {
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;
   margin-right: 10px;
 }
 
-.order__date {
+.orders__list .order__date {
   font-weight: 400;
   font-size: 20px;
   line-height: 28px;
   margin-right: 60px;
 }
 
-.order__price {
+.orders__list .order__price {
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;
 }
 
-.order__status {
+.orders__list .order__status {
   position: relative;
   padding: 15px 35px;
   right: -19px;
@@ -5434,11 +5434,11 @@ body::after {
   text-align: center;
 }
 
-.order__invoice {
+.orders__list .order__invoice {
   max-width: 190px;
 }
 
-.order__invoice-button {
+.orders__list .order__invoice-button {
   margin: 0px 0px 5px 0px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -5451,32 +5451,32 @@ body::after {
           align-items: center;
 }
 
-.order__invoice-text {
+.orders__list .order__invoice-text {
   font-size: 14px;
 }
 
-.order__details-wrapper {
+.orders__list .order__details-wrapper {
   padding-top: 50px;
 }
 
-.order__details {
+.orders__list .order__details {
   padding: 0px 40px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
 
-.order__details-col {
+.orders__list .order__details-col {
   -webkit-box-flex: 0;
       -ms-flex: 0 1 50%;
           flex: 0 1 50%;
 }
 
-.order__details-col:first-child {
+.orders__list .order__details-col:first-child {
   margin: 0px 20px 0px 0px;
 }
 
-.order__details-row {
+.orders__list .order__details-row {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -5485,20 +5485,20 @@ body::after {
   margin: 0px 0px 30px 0px;
 }
 
-.order__details-name {
+.orders__list .order__details-name {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 180px;
           flex: 0 0 180px;
 }
 
-.order__details-content {
+.orders__list .order__details-content {
   -webkit-box-flex: 1;
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
   font-weight: 600;
 }
 
-.order__more-btn {
+.orders__list .order__more-btn {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -5513,22 +5513,22 @@ body::after {
   background-color: rgba(235, 122, 29, 0.1);
 }
 
-.order__cards {
+.orders__list .order__cards {
   padding: 38px 42px 0px 120px;
   overflow: hidden;
 }
 
-.order__cards-title {
+.orders__list .order__cards-title {
   font-size: 20px;
   font-weight: 500;
   margin: 0px 0px 35px 0px;
 }
 
-.order__card {
+.orders__list .order__card {
   margin: 0px 0px 35px 0px;
 }
 
-.order__total {
+.orders__list .order__total {
   font-size: 20px;
   line-height: 20px;
   font-weight: 500;
@@ -5539,7 +5539,7 @@ body::after {
   position: relative;
 }
 
-.order__total::before {
+.orders__list .order__total::before {
   content: "";
   display: block;
   width: 150%;
@@ -5550,7 +5550,7 @@ body::after {
   background-color: #e3e3e3;
 }
 
-.order__text {
+.orders__list .order__text {
   margin: 0px 170px 0px 0px;
 }
 
@@ -5643,6 +5643,84 @@ body::after {
 
 .card-order__quantity {
   margin: 0px 70px 0px 0px;
+}
+
+.requisites__wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  max-width: 1400px;
+}
+
+.requisites__main {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  margin-right: 1.875rem;
+}
+
+.requisites__col {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-bottom: 0.9375rem;
+}
+
+.requisites__name {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  margin-bottom: 0.625rem;
+}
+
+.requisites__value {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  padding-left: 1.25rem;
+}
+
+.requisites__sidebar {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 330px;
+          flex: 0 0 330px;
+}
+
+.requisites__link {
+  border: 1px solid #CDCDCD;
+  border-radius: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 2.1875rem;
+}
+
+.requisites__link-col {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: 1.25rem;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.requisites__link-name {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.3125rem;
+}
+
+.requisites__signature {
+  font-size: 14px;
+  line-height: 22px;
 }
 
 .tippy-box[data-animation=fade][data-state=hidden] {
@@ -7631,7 +7709,7 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     min-width: 320px;
   }
 
-  .order__date {
+  .orders__list .order__date {
     margin-right: 20px;
   }
 }
@@ -7720,18 +7798,18 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     margin: 0px 0px 30px 0px;
   }
 
-  .order__details {
+  .orders__list .order__details {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
   }
 
-  .order__total {
+  .orders__list .order__total {
     padding: 38px 0px 0px 0px;
   }
 
-  .order__text {
+  .orders__list .order__text {
     margin: 0px 70px 0px 0px;
   }
 
@@ -7818,15 +7896,15 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     padding: 0px 15px;
   }
 
-  .order {
+  .orders__list .order {
     padding: 8px 15px;
   }
 
-  .order__details {
+  .orders__list .order__details {
     padding: 0px;
   }
 
-  .order__cards {
+  .orders__list .order__cards {
     padding: 34px 0px 35px 0px;
   }
 
@@ -7909,12 +7987,12 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     width: 100%;
   }
 
-  .order__status {
+  .orders__list .order__status {
     margin: 0px 0px 10px 0px;
     padding: 15px 15px;
   }
 
-  .order__text {
+  .orders__list .order__text {
     margin: 0px 20px 0px 0px;
   }
 
@@ -7938,11 +8016,11 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     padding: 0px 0px 0px 10px;
   }
 
-  .order__status {
+  .orders__list .order__status {
     font-size: 13px;
   }
 
-  .order__total {
+  .orders__list .order__total {
     font-size: 16px;
   }
 
@@ -8349,7 +8427,7 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     margin-right: 0;
   }
 
-  .order__header {
+  .orders__list .order__header {
     -webkit-box-orient: vertical;
     -webkit-box-direction: reverse;
         -ms-flex-direction: column-reverse;
@@ -8360,13 +8438,23 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     padding-left: 5rem;
   }
 
-  .order__title {
+  .orders__list .order__title {
     padding-left: 0;
     margin-top: 1.25rem;
   }
 
-  .order__status {
+  .orders__list .order__status {
     left: 0;
+  }
+
+  .requisites__sidebar {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 250px;
+            flex: 0 0 250px;
+  }
+
+  .requisites__link {
+    padding: 15px;
   }
 }
 
@@ -8931,9 +9019,26 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     padding: 1.875rem 1.25rem;
   }
 
-  .order__header {
+  .orders__list .order__header {
     padding: 10px;
     margin-bottom: 0;
+  }
+
+  .requisites__wrapper {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
+        -ms-flex-direction: column-reverse;
+            flex-direction: column-reverse;
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+  }
+
+  .requisites__sidebar {
+    -webkit-box-flex: 0;
+        -ms-flex: none;
+            flex: none;
+    margin-bottom: 1.875rem;
   }
 }
 
@@ -9244,14 +9349,14 @@ body:not(.is-using-mouse) .fancybox__container :focus {
 }
 
 @media (max-width: 1280px) and (min-width: 998px), (max-width: 530px) {
-  .order__details-row {
+  .orders__list .order__details-row {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
   }
 
-  .order__details-name {
+  .orders__list .order__details-name {
     -webkit-box-flex: 1;
         -ms-flex: 1 1 auto;
             flex: 1 1 auto;
