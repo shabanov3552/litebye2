@@ -8153,6 +8153,7 @@
                 e.target.closest(".form__clear-svg").classList.remove("_active");
             }
             if (!e.target.closest(".catalog__body") && document.querySelector(".menu-open") || e.target.closest(".catalog__close")) {
+                console.log("qwe");
                 functions_menuClose();
                 if (document.documentElement.classList.contains("menu-open")) document.documentElement.classList.remove("menu-open");
                 if (document.documentElement.classList.contains("sub-menu-open")) document.documentElement.classList.remove("sub-menu-open");
@@ -8160,6 +8161,16 @@
                     document.querySelector("._sub-menu-open").classList.remove("_sub-menu-open");
                     document.querySelector("._sub-menu-active").classList.remove("_sub-menu-active");
                 }
+            }
+            if (e.target.closest("textarea")) txtarAutoHeight(e.target);
+            if (e.target.closest(".personal-data__change")) {
+                changeData(e.target);
+                e.preventDefault();
+            }
+            if (e.target.closest(".order__more-btn")) {
+                let target = e.target.closest(".order__more-btn");
+                target.classList.contains("_spoller-active") ? target.innerHTML = "Свернуть детали заказа" : target.innerHTML = "Показать детали заказа";
+                e.preventDefault();
             }
         }));
         function documentActions(e) {
@@ -8298,6 +8309,49 @@
                 copyButton.innerHTML = "Ссылка скопированна";
                 copyButton.classList.remove("btn__orange");
                 copyButton.setAttribute("disabled", "true");
+            }));
+        }
+        function txtarAutoHeight(target) {
+            const el = target;
+            if (el.closest("textarea")) {
+                let origHeight;
+                if (el.dataset.height) origHeight = el.dataset.height; else {
+                    origHeight = el.scrollHeight;
+                    el.dataset.height = origHeight;
+                }
+                origHeight = Number(origHeight);
+                console.log(origHeight);
+                el.style.height = el.setAttribute("style", "height: " + (origHeight + 1) + "px");
+                el.addEventListener("input", (e => {
+                    if (el.scrollHeight > origHeight) {
+                        el.style.height = "auto";
+                        el.style.height = el.scrollHeight + 10 + "px";
+                    } else {
+                        el.style.height = "auto";
+                        el.style.height = origHeight + "px";
+                    }
+                }));
+            }
+        }
+        function changeData(target) {
+            let el = target.closest(".personal-data__row");
+            el.classList.add("_active");
+            let submitBtn = el.querySelector(".personal-data__btn");
+            submitBtn.addEventListener("click", (function(e) {
+                el.classList.remove("_active");
+                el.classList.add("show-msg");
+                setTimeout((() => {
+                    el.classList.remove("show-msg");
+                }), 3e3);
+            }));
+            document.addEventListener("keydown", (function(e) {
+                if ("Escape" === e.code || "Enter" === e.code || "NumpadEnter" === e.code) {
+                    el.classList.remove("_active");
+                    el.classList.add("show-msg");
+                    setTimeout((() => {
+                        el.classList.remove("show-msg");
+                    }), 3e3);
+                }
             }));
         }
         function isWebp() {
@@ -8450,6 +8504,86 @@
                 }), delay);
             }
         };
+        function spollers() {
+            const spollersArray = document.querySelectorAll("[data-spollers]");
+            if (spollersArray.length > 0) {
+                const spollersRegular = Array.from(spollersArray).filter((function(item, index, self) {
+                    return !item.dataset.spollers.split(",")[0];
+                }));
+                if (spollersRegular.length) initSpollers(spollersRegular);
+                let mdQueriesArray = dataMediaQueries(spollersArray, "spollers");
+                if (mdQueriesArray && mdQueriesArray.length) mdQueriesArray.forEach((mdQueriesItem => {
+                    mdQueriesItem.matchMedia.addEventListener("change", (function() {
+                        initSpollers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia);
+                    }));
+                    initSpollers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia);
+                }));
+                function initSpollers(spollersArray, matchMedia = false) {
+                    spollersArray.forEach((spollersBlock => {
+                        spollersBlock = matchMedia ? spollersBlock.item : spollersBlock;
+                        if (matchMedia.matches || !matchMedia) {
+                            spollersBlock.classList.add("_spoller-init");
+                            initSpollerBody(spollersBlock);
+                            spollersBlock.addEventListener("click", setSpollerAction);
+                        } else {
+                            spollersBlock.classList.remove("_spoller-init");
+                            initSpollerBody(spollersBlock, false);
+                            spollersBlock.removeEventListener("click", setSpollerAction);
+                        }
+                    }));
+                }
+                function initSpollerBody(spollersBlock, hideSpollerBody = true) {
+                    let spollerTitles = spollersBlock.querySelectorAll("[data-spoller]");
+                    if (spollerTitles.length) {
+                        spollerTitles = Array.from(spollerTitles).filter((item => item.closest("[data-spollers]") === spollersBlock));
+                        spollerTitles.forEach((spollerTitle => {
+                            if (hideSpollerBody) {
+                                spollerTitle.removeAttribute("tabindex");
+                                if (!spollerTitle.classList.contains("_spoller-active")) spollerTitle.nextElementSibling.hidden = true;
+                            } else {
+                                spollerTitle.setAttribute("tabindex", "-1");
+                                spollerTitle.nextElementSibling.hidden = false;
+                            }
+                        }));
+                    }
+                }
+                function setSpollerAction(e) {
+                    const el = e.target;
+                    if (el.closest("[data-spoller]")) {
+                        const spollerTitle = el.closest("[data-spoller]");
+                        const spollersBlock = spollerTitle.closest("[data-spollers]");
+                        const oneSpoller = spollersBlock.hasAttribute("data-one-spoller");
+                        const spollerSpeed = spollersBlock.dataset.spollersSpeed ? parseInt(spollersBlock.dataset.spollersSpeed) : 500;
+                        if (!spollersBlock.querySelectorAll("._slide").length) {
+                            if (oneSpoller && !spollerTitle.classList.contains("_spoller-active")) hideSpollersBody(spollersBlock);
+                            spollerTitle.classList.toggle("_spoller-active");
+                            _slideToggle(spollerTitle.nextElementSibling, spollerSpeed);
+                        }
+                        e.preventDefault();
+                    }
+                }
+                function hideSpollersBody(spollersBlock) {
+                    const spollerActiveTitle = spollersBlock.querySelector("[data-spoller]._spoller-active");
+                    const spollerSpeed = spollersBlock.dataset.spollersSpeed ? parseInt(spollersBlock.dataset.spollersSpeed) : 500;
+                    if (spollerActiveTitle && !spollersBlock.querySelectorAll("._slide").length) {
+                        spollerActiveTitle.classList.remove("_spoller-active");
+                        _slideUp(spollerActiveTitle.nextElementSibling, spollerSpeed);
+                    }
+                }
+                const spollersClose = document.querySelectorAll("[data-spoller-close]");
+                if (spollersClose.length) document.addEventListener("click", (function(e) {
+                    const el = e.target;
+                    if (!el.closest("[data-spollers]")) spollersClose.forEach((spollerClose => {
+                        const spollersBlock = spollerClose.closest("[data-spollers]");
+                        if (spollersBlock.classList.contains("_spoller-init")) {
+                            const spollerSpeed = spollersBlock.dataset.spollersSpeed ? parseInt(spollersBlock.dataset.spollersSpeed) : 500;
+                            spollerClose.classList.remove("_spoller-active");
+                            _slideUp(spollerClose.nextElementSibling, spollerSpeed);
+                        }
+                    }));
+                }));
+            }
+        }
         function tabs() {
             const tabs = document.querySelectorAll("[data-tabs]");
             let tabsActiveHash = [];
@@ -9136,25 +9270,6 @@
                 return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,8})+$/.test(formRequiredItem.value);
             }
         };
-        function formQuantity() {
-            document.addEventListener("click", (function(e) {
-                let targetElement = e.target;
-                if (targetElement.closest("[data-quantity-plus]") || targetElement.closest("[data-quantity-minus]")) {
-                    const valueElement = targetElement.closest("[data-quantity]").querySelector("[data-quantity-value]");
-                    let value = parseInt(valueElement.value);
-                    if (targetElement.hasAttribute("data-quantity-plus")) {
-                        value++;
-                        if (+valueElement.dataset.quantityMax && +valueElement.dataset.quantityMax < value) value = valueElement.dataset.quantityMax;
-                    } else {
-                        --value;
-                        if (+valueElement.dataset.quantityMin) {
-                            if (+valueElement.dataset.quantityMin > value) value = valueElement.dataset.quantityMin;
-                        } else if (value < 1) value = 1;
-                    }
-                    targetElement.closest("[data-quantity]").querySelector("[data-quantity-value]").value = value;
-                }
-            }));
-        }
         class SelectConstructor {
             constructor(props, data = null) {
                 let defaultConfig = {
@@ -9190,10 +9305,7 @@
                 this._this = this;
                 if (this.config.init) {
                     const selectItems = data ? document.querySelectorAll(data) : document.querySelectorAll("select");
-                    if (selectItems.length) {
-                        this.selectsInit(selectItems);
-                        this.setLogging(`Проснулся, построил селектов: (${selectItems.length})`);
-                    } else this.setLogging("Сплю, нет ни одного select zzZZZzZZz");
+                    if (selectItems.length) this.selectsInit(selectItems);
                 }
             }
             getSelectClass(className) {
@@ -9433,6 +9545,9 @@
                     tempButton.remove();
                 }
                 const selectItem = originalSelect.parentElement;
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent("change", false, true);
+                originalSelect.dispatchEvent(evt);
                 this.selectCallback(selectItem, originalSelect);
             }
             selectDisabled(selectItem, originalSelect) {
@@ -16544,6 +16659,57 @@
             use_native: true
         });
         let addWindowScrollEvent = false;
+        function stickyBlock() {
+            addWindowScrollEvent = true;
+            function stickyBlockInit() {
+                const stickyParents = document.querySelectorAll("[data-sticky]");
+                if (stickyParents.length) stickyParents.forEach((stickyParent => {
+                    let stickyConfig = {
+                        media: stickyParent.dataset.sticky ? parseInt(stickyParent.dataset.sticky) : null,
+                        top: stickyParent.dataset.stickyTop ? parseInt(stickyParent.dataset.stickyTop) : 0,
+                        bottom: stickyParent.dataset.stickyBottom ? parseInt(stickyParent.dataset.stickyBottom) : 0,
+                        header: stickyParent.hasAttribute("data-sticky-header") ? document.querySelector("header.header").offsetHeight : 0
+                    };
+                    stickyBlockItem(stickyParent, stickyConfig);
+                }));
+            }
+            function stickyBlockItem(stickyParent, stickyConfig) {
+                const stickyBlockItem = stickyParent.querySelector("[data-sticky-item]");
+                const headerHeight = stickyConfig.header;
+                const offsetTop = headerHeight + stickyConfig.top;
+                const startPoint = stickyBlockItem.getBoundingClientRect().top + scrollY - offsetTop;
+                document.addEventListener("windowScroll", stickyBlockActions);
+                window.addEventListener("resize", stickyBlockActions);
+                function stickyBlockActions(e) {
+                    const endPoint = stickyParent.offsetHeight + stickyParent.getBoundingClientRect().top + scrollY - (offsetTop + stickyBlockItem.offsetHeight + stickyConfig.bottom);
+                    let stickyItemValues = {
+                        position: "relative",
+                        bottom: "auto",
+                        top: "0px",
+                        right: "0px",
+                        width: "auto"
+                    };
+                    if (!stickyConfig.media || stickyConfig.media < window.innerWidth) if (offsetTop + stickyConfig.bottom + stickyBlockItem.offsetHeight < window.innerHeight) if (scrollY >= startPoint && scrollY <= endPoint) {
+                        stickyItemValues.position = `fixed`;
+                        stickyItemValues.bottom = `auto`;
+                        stickyItemValues.top = `${offsetTop}px`;
+                        stickyItemValues.right = `${stickyBlockItem.getBoundingClientRect().right}px`;
+                        stickyItemValues.width = `${stickyBlockItem.offsetWidth}px`;
+                    } else if (scrollY >= endPoint) {
+                        stickyItemValues.position = `absolute`;
+                        stickyItemValues.bottom = `${stickyConfig.bottom}px`;
+                        stickyItemValues.top = `auto`;
+                        stickyItemValues.right = `0px`;
+                        stickyItemValues.width = `${stickyBlockItem.offsetWidth}px`;
+                    }
+                    stickyBlockType(stickyBlockItem, stickyItemValues);
+                }
+            }
+            function stickyBlockType(stickyBlockItem, stickyItemValues) {
+                stickyBlockItem.style.cssText = `position:${stickyItemValues.position};bottom:${stickyItemValues.bottom};top:${stickyItemValues.top};left:${stickyItemValues.left};width:${stickyItemValues.width};`;
+            }
+            stickyBlockInit();
+        }
         setTimeout((() => {
             if (addWindowScrollEvent) {
                 let windowScroll = new Event("windowScroll");
@@ -20663,12 +20829,13 @@
         addTouchClass();
         menuInit();
         searchInit();
+        spollers();
         tabs();
         showMore();
         formFieldsInit({
             viewPass: true,
             autoHeight: true
         });
-        formQuantity();
+        stickyBlock();
     })();
 })();
