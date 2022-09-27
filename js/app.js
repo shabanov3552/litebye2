@@ -8153,7 +8153,6 @@
                 e.target.closest(".form__clear-svg").classList.remove("_active");
             }
             if (!e.target.closest(".catalog__body") && document.querySelector(".menu-open") || e.target.closest(".catalog__close")) {
-                console.log("qwe");
                 functions_menuClose();
                 if (document.documentElement.classList.contains("menu-open")) document.documentElement.classList.remove("menu-open");
                 if (document.documentElement.classList.contains("sub-menu-open")) document.documentElement.classList.remove("sub-menu-open");
@@ -8191,7 +8190,6 @@
                     subMenu.classList.add("_sub-menu-open");
                     e.preventDefault();
                 } else {
-                    console.log("Ой ой, нет такого подменю :(");
                     const activeLink = document.querySelector("._sub-menu-active");
                     const activeBlock = document.querySelector("._sub-menu-open");
                     if (activeLink) {
@@ -8217,13 +8215,13 @@
         const layout = document.querySelector(".js-layout");
         if (layout) {
             if (localStorage.getItem("layout")) {
-                document.querySelector(".main-catalog__cards").classList.add("row");
+                document.querySelector(".main-catalog__cards, .favorites__cards").classList.add("row");
                 layout.querySelector(".js-layout__row").classList.add("_active");
                 layout.querySelector(".js-layout__column").classList.remove("_active");
             }
             layout.addEventListener("click", (function(e) {
                 let target = e.target;
-                let cards = document.querySelector(".main-catalog__cards");
+                let cards = document.querySelector(".main-catalog__cards, .favorites__cards");
                 let rowBtn = layout.querySelector(".js-layout__row");
                 let colBtn = layout.querySelector(".js-layout__column");
                 if (target.closest(".js-layout__column")) {
@@ -8287,11 +8285,7 @@
                 if (navigator.share && isMobile.any()) navigator.share({
                     title: thisTitle,
                     url: thisUrl
-                }).then((function() {
-                    console.log("Shareing successfull");
-                })).catch((function() {
-                    console.log("Sharing failed");
-                })); else {
+                }).then((function() {})).catch((function() {})); else {
                     modules_flsModules.popup.open("#share-popup");
                     copyUrl();
                 }
@@ -8320,7 +8314,6 @@
                     el.dataset.height = origHeight;
                 }
                 origHeight = Number(origHeight);
-                console.log(origHeight);
                 el.style.height = el.setAttribute("style", "height: " + (origHeight + 1) + "px");
                 el.addEventListener("input", (e => {
                     if (el.scrollHeight > origHeight) {
@@ -8903,7 +8896,7 @@
                     closeEsc: true,
                     bodyLock: true,
                     hashSettings: {
-                        location: true,
+                        location: false,
                         goHash: true
                     },
                     on: {
@@ -9610,12 +9603,10 @@
                 const setRangeSlider = (i, value) => {
                     let arr = [ null, null ];
                     arr[i] = value;
-                    console.log(arr);
                     rangeSlider.noUiSlider.set(arr);
                 };
                 inputs.forEach(((el, index) => {
                     el.addEventListener("change", (e => {
-                        console.log(index);
                         setRangeSlider(index, e.currentTarget.value);
                     }));
                 }));
