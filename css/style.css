@@ -1662,6 +1662,14 @@ body::after {
   -o-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
   padding: 0.625rem 0.875rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 100%;
 }
 
 .product-card::before {
@@ -1678,6 +1686,17 @@ body::after {
   transition: all 0.3s ease 0s;
 }
 
+.product-card__link {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 100%;
+}
+
 .product-card__image-ibg {
   display: block;
   padding-bottom: 83%;
@@ -1686,11 +1705,22 @@ body::after {
 
 .product-card__info {
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 100%;
 }
 
 .product-card__name {
   line-height: 24px;
   margin-bottom: 0.75rem;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
 }
 
 .product-card__tags {
@@ -2073,6 +2103,13 @@ body::after {
   display: -ms-flexbox;
   display: flex;
   overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.breadcrumbs__list *::-webkit-scrollbar {
+  display: none;
 }
 
 .breadcrumbs__li {
@@ -6114,10 +6151,6 @@ body::after {
   transition: color 0.3s ease 0s;
 }
 
-.answer__more:hover {
-  color: #000;
-}
-
 .faq-order__row {
   display: -ms-grid;
   display: grid;
@@ -6216,7 +6249,7 @@ body::after {
 .favorites__cards {
   display: -ms-grid;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
   margin-bottom: 5.4375rem;
 }
 
@@ -7931,6 +7964,10 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     gap: 10px 0;
   }
 
+  .answer__more:hover {
+    color: #000;
+  }
+
   .favorites__cards.row {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -9290,7 +9327,7 @@ body:not(.is-using-mouse) .fancybox__container :focus {
 
 @media (max-width: 47.99875em) {
   .wrapper {
-    padding-bottom: 8.125rem;
+    padding-bottom: 5rem;
   }
 
   [class*=__container] {
@@ -9331,6 +9368,10 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     margin: 2.5rem 0;
   }
 
+  .product-slider:not(:last-child) {
+    margin-bottom: 1.25rem;
+  }
+
   .product-slider__title + .product-slider__baners {
     margin-top: 2.0625rem;
   }
@@ -9343,45 +9384,6 @@ body:not(.is-using-mouse) .fancybox__container :focus {
 
   .product-slider__baners {
     margin-bottom: 1.0625rem;
-  }
-
-  .product-card {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    height: 100%;
-  }
-
-  .product-card__link {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    height: 100%;
-  }
-
-  .product-card__info {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    height: 100%;
-  }
-
-  .product-card__name {
-    -webkit-box-flex: 1;
-        -ms-flex: 1 1 auto;
-            flex: 1 1 auto;
   }
 
   .product-card__footer {
@@ -9489,7 +9491,7 @@ body:not(.is-using-mouse) .fancybox__container :focus {
             flex: 1 1 100%;
     padding: 0;
     height: calc(100% - 70px);
-    padding-bottom: 3.125rem;
+    padding-bottom: 6.25rem;
   }
 
   .menu-catalog__link {
@@ -9700,6 +9702,10 @@ body:not(.is-using-mouse) .fancybox__container :focus {
   }
 
   .sort__title {
+    display: none;
+  }
+
+  .sort__right {
     display: none;
   }
 
@@ -10043,6 +10049,10 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     -webkit-box-flex: 1;
         -ms-flex: 1 1 100%;
             flex: 1 1 100%;
+  }
+
+  .main-page-baner__container {
+    padding: 0;
   }
 
   .main-catalog__banner {

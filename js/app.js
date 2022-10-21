@@ -11758,6 +11758,16 @@
         modules_flsModules.tippy = tippy_esm("[data-tippy-content]", {
             placement: "right-end"
         });
+        const breakpoint = window.matchMedia("(max-width: 768px)");
+        const breakpointChecker = () => {
+            if (breakpoint.matches) for (let i = 0; i < modules_flsModules.tippy.length; i++) modules_flsModules.tippy[i].setProps({
+                placement: "top"
+            }); else for (let i = 0; i < modules_flsModules.tippy.length; i++) modules_flsModules.tippy[i].setProps({
+                placement: "right-end"
+            });
+        };
+        breakpoint.addEventListener("change", breakpointChecker);
+        breakpointChecker();
         function isObject(obj) {
             return null !== obj && "object" === typeof obj && "constructor" in obj && obj.constructor === Object;
         }
@@ -15360,6 +15370,10 @@
                 spaceBetween: 0,
                 autoHeight: true,
                 speed: 800,
+                autoplay: {
+                    delay: 4e3,
+                    disableOnInteraction: false
+                },
                 navigation: {
                     prevEl: ".banner-catalog__swiper-button-prev",
                     nextEl: ".banner-catalog__swiper-button-next"
@@ -15404,17 +15418,13 @@
                     el.closest(".product-slider").querySelector(".product-slider__nav-btns").classList.add(btnClassName);
                     el.classList.add(className);
                     if (el.closest(".main-catalog")) new core("." + className, {
-                        modules: [ Navigation, Autoplay ],
+                        modules: [ Navigation ],
                         observer: true,
                         observeParents: true,
                         slidesPerView: 6,
                         spaceBetween: 0,
                         speed: 300,
                         watchSlidesProgress: true,
-                        autoplay: {
-                            delay: 3e3,
-                            disableOnInteraction: false
-                        },
                         navigation: {
                             prevEl: "." + btnClassName + " .swiper-button-prev",
                             nextEl: "." + btnClassName + " .swiper-button-next"
@@ -15444,17 +15454,13 @@
                         },
                         on: {}
                     }); else new core("." + className, {
-                        modules: [ Navigation, Autoplay ],
+                        modules: [ Navigation ],
                         observer: true,
                         observeParents: true,
                         slidesPerView: 6,
                         spaceBetween: 0,
                         speed: 300,
                         watchSlidesProgress: true,
-                        autoplay: {
-                            delay: 3e3,
-                            disableOnInteraction: false
-                        },
                         navigation: {
                             prevEl: "." + btnClassName + " .swiper-button-prev",
                             nextEl: "." + btnClassName + " .swiper-button-next"
