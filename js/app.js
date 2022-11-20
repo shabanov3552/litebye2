@@ -8358,6 +8358,7 @@
         if (catalog) {
             let catalogObserve = new MutationObserver((() => {
                 lazyMedia.update();
+                if (localStorage.getItem("layout")) document.querySelector(".main-catalog__cards, .favorites__cards").classList.add("row");
             }));
             catalogObserve.observe(catalog, {
                 childList: true,

@@ -7945,6 +7945,7 @@ body:not(.is-using-mouse) .fancybox__container :focus {
     -webkit-box-direction: normal;
         -ms-flex-direction: row;
             flex-direction: row;
+    max-width: 1020px;
   }
 
   .main-catalog__cards.row .product-card:not(:last-child) {
