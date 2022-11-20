@@ -8144,6 +8144,12 @@
     (() => {
         "use strict";
         const modules_flsModules = {};
+        var lazyload_min = __webpack_require__(2732);
+        const lazyMedia = new lazyload_min({
+            elements_selector: ".product-card__image-ibg img, .main-catalog__image-ibg img, .banner-catalog__image-ibg img, .menu-banner__image-ibg img",
+            class_loaded: "_lazy-loaded",
+            use_native: true
+        });
         document.addEventListener("click", (function(e) {
             if (e.target.closest(".form__clear-svg")) {
                 let input = e.target.closest(".form__line").querySelector(".form__input");
@@ -8188,6 +8194,7 @@
                     document.documentElement.classList.add("sub-menu-open");
                     targetElement.classList.add("_sub-menu-active");
                     subMenu.classList.add("_sub-menu-open");
+                    showMore(subMenu.querySelectorAll("[data-showmore]"));
                     e.preventDefault();
                 } else {
                     const activeLink = document.querySelector("._sub-menu-active");
@@ -8346,6 +8353,21 @@
                     }), 3e3);
                 }
             }));
+        }
+        const catalog = document.querySelector(".main-catalog__content");
+        if (catalog) {
+            let catalogObserve = new MutationObserver((() => {
+                lazyMedia.update();
+            }));
+            catalogObserve.observe(catalog, {
+                childList: true,
+                subtree: true
+            });
+        }
+        const filtersPopup = document.querySelector("#filters-more");
+        if (filtersPopup) {
+            filtersPopup.remove();
+            document.querySelector(".wrapper").insertAdjacentElement("afterend", filtersPopup);
         }
         function isWebp() {
             function testWebP(callback) {
@@ -8714,11 +8736,14 @@
                 }
             }));
         }
-        function showMore() {
-            window.addEventListener("load", (function(e) {
-                const showMoreBlocks = document.querySelectorAll("[data-showmore]");
-                let showMoreBlocksRegular;
-                let mdQueriesArray;
+        function showMore(targetBlocks) {
+            let showMoreBlocks;
+            let showMoreBlocksRegular;
+            let mdQueriesArray;
+            if (targetBlocks) targetBlocks.forEach((targetBlock => {
+                initItem(targetBlock);
+            })); else window.addEventListener("load", (e => {
+                showMoreBlocks = document.querySelectorAll("[data-showmore]");
                 if (showMoreBlocks.length) {
                     showMoreBlocksRegular = Array.from(showMoreBlocks).filter((function(item, index, self) {
                         return !item.dataset.showmoreMedia;
@@ -8736,96 +8761,96 @@
                         initItemsMedia(mdQueriesArray);
                     }
                 }
-                function initItemsMedia(mdQueriesArray) {
-                    mdQueriesArray.forEach((mdQueriesItem => {
-                        initItems(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia);
-                    }));
-                }
-                function initItems(showMoreBlocks, matchMedia) {
-                    showMoreBlocks.forEach((showMoreBlock => {
-                        initItem(showMoreBlock, matchMedia);
-                    }));
-                }
-                function initItem(showMoreBlock, matchMedia = false) {
-                    showMoreBlock = matchMedia ? showMoreBlock.item : showMoreBlock;
-                    showMoreBlock.classList.add("_show-more-init");
-                    let showMoreContent = showMoreBlock.querySelectorAll("[data-showmore-content]");
-                    let showMoreButton = showMoreBlock.querySelectorAll("[data-showmore-button]");
-                    showMoreContent = Array.from(showMoreContent).filter((item => item.closest("[data-showmore]") === showMoreBlock))[0];
-                    showMoreButton = Array.from(showMoreButton).filter((item => item.closest("[data-showmore]") === showMoreBlock))[0];
-                    const hiddenHeight = getHeight(showMoreBlock, showMoreContent);
-                    if (!showMoreContent.closest("._showmore-active")) if (matchMedia.matches || !matchMedia) if (hiddenHeight < getOriginalHeight(showMoreContent)) {
-                        _slideUp(showMoreContent, 0, hiddenHeight);
-                        showMoreButton.hidden = false;
-                    } else {
-                        _slideDown(showMoreContent, 0, hiddenHeight);
-                        showMoreButton.hidden = true;
-                    } else {
-                        _slideDown(showMoreContent, 0, hiddenHeight);
-                        showMoreButton.hidden = true;
-                    } else if (showMoreContent.closest("._showmore-active") && !(matchMedia.matches || !matchMedia)) showMoreButton.hidden = true; else if (showMoreContent.closest("._showmore-active") && (matchMedia.matches || !matchMedia)) showMoreButton.hidden = false;
-                }
-                function getHeight(showMoreBlock, showMoreContent) {
-                    let hiddenHeight = 0;
-                    const showMoreType = showMoreBlock.dataset.showmore ? showMoreBlock.dataset.showmore : "size";
-                    if ("items" === showMoreType) {
-                        const showMoreTypeValue = showMoreContent.dataset.showmoreContent ? showMoreContent.dataset.showmoreContent : 3;
-                        const showMoreItems = showMoreContent.children;
-                        if (showMoreContent.children.length <= showMoreTypeValue) return;
-                        for (let index = 1; index < showMoreItems.length; index++) {
-                            const showMoreItem = showMoreItems[index - 1];
-                            hiddenHeight += showMoreItem.offsetHeight;
-                            if (index == showMoreTypeValue) break;
-                        }
-                    } else if ("parag" === showMoreType) {
-                        const showMoreTypeValue = showMoreContent.dataset.showmoreContent ? showMoreContent.dataset.showmoreContent : 2;
-                        const showMoreItems = showMoreContent.children;
-                        if (showMoreContent.children.length <= showMoreTypeValue) return;
-                        for (let index = 1; index < showMoreItems.length; index++) {
-                            const showMoreItem = showMoreItems[index - 1];
-                            hiddenHeight += showMoreItem.offsetHeight;
-                            if (index == showMoreTypeValue) break;
-                        }
-                    } else {
-                        const showMoreTypeValue = showMoreContent.dataset.showmoreContent ? showMoreContent.dataset.showmoreContent : 150;
-                        hiddenHeight = showMoreTypeValue;
-                    }
-                    return hiddenHeight;
-                }
-                function getOriginalHeight(showMoreContent) {
-                    let parentHidden;
-                    let hiddenHeight = showMoreContent.offsetHeight;
-                    showMoreContent.style.removeProperty("height");
-                    if (showMoreContent.closest(`[hidden]`)) {
-                        parentHidden = showMoreContent.closest(`[hidden]`);
-                        parentHidden.hidden = false;
-                    }
-                    let originalHeight = showMoreContent.offsetHeight;
-                    parentHidden ? parentHidden.hidden = true : null;
-                    showMoreContent.style.height = `${hiddenHeight}px`;
-                    return originalHeight;
-                }
-                function showMoreActions(e) {
-                    const targetEvent = e.target;
-                    const targetType = e.type;
-                    if ("click" === targetType) {
-                        if (targetEvent.closest("[data-showmore-button]")) {
-                            const showMoreButton = targetEvent.closest("[data-showmore-button]");
-                            const showMoreBlock = showMoreButton.closest("[data-showmore]");
-                            const showMoreContent = showMoreBlock.querySelector("[data-showmore-content]");
-                            const showMoreSpeed = showMoreBlock.dataset.showmoreButton ? showMoreBlock.dataset.showmoreButton : "500";
-                            const hiddenHeight = getHeight(showMoreBlock, showMoreContent);
-                            if (!showMoreContent.classList.contains("_slide")) {
-                                showMoreBlock.classList.contains("_showmore-active") ? _slideUp(showMoreContent, showMoreSpeed, hiddenHeight) : _slideDown(showMoreContent, showMoreSpeed, hiddenHeight);
-                                showMoreBlock.classList.toggle("_showmore-active");
-                            }
-                        }
-                    } else if ("resize" === targetType) {
-                        showMoreBlocksRegular && showMoreBlocksRegular.length ? initItems(showMoreBlocksRegular) : null;
-                        mdQueriesArray && mdQueriesArray.length ? initItemsMedia(mdQueriesArray) : null;
-                    }
-                }
             }));
+            function initItemsMedia(mdQueriesArray) {
+                mdQueriesArray.forEach((mdQueriesItem => {
+                    initItems(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia);
+                }));
+            }
+            function initItems(showMoreBlocks, matchMedia) {
+                showMoreBlocks.forEach((showMoreBlock => {
+                    initItem(showMoreBlock, matchMedia);
+                }));
+            }
+            function initItem(showMoreBlock, matchMedia = false) {
+                showMoreBlock = matchMedia ? showMoreBlock.item : showMoreBlock;
+                showMoreBlock.classList.add("_show-more-init");
+                let showMoreContent = showMoreBlock.querySelectorAll("[data-showmore-content]");
+                let showMoreButton = showMoreBlock.querySelectorAll("[data-showmore-button]");
+                showMoreContent = Array.from(showMoreContent).filter((item => item.closest("[data-showmore]") === showMoreBlock))[0];
+                showMoreButton = Array.from(showMoreButton).filter((item => item.closest("[data-showmore]") === showMoreBlock))[0];
+                const hiddenHeight = getHeight(showMoreBlock, showMoreContent);
+                if (!showMoreContent.closest("._showmore-active")) if (matchMedia.matches || !matchMedia) if (hiddenHeight < getOriginalHeight(showMoreContent)) {
+                    _slideUp(showMoreContent, 0, hiddenHeight);
+                    showMoreButton.hidden = false;
+                } else {
+                    _slideDown(showMoreContent, 0, hiddenHeight);
+                    showMoreButton.hidden = true;
+                } else {
+                    _slideDown(showMoreContent, 0, hiddenHeight);
+                    showMoreButton.hidden = true;
+                } else if (showMoreContent.closest("._showmore-active") && !(matchMedia.matches || !matchMedia)) showMoreButton.hidden = true; else if (showMoreContent.closest("._showmore-active") && (matchMedia.matches || !matchMedia)) showMoreButton.hidden = false;
+            }
+            function getHeight(showMoreBlock, showMoreContent) {
+                let hiddenHeight = 0;
+                const showMoreType = showMoreBlock.dataset.showmore ? showMoreBlock.dataset.showmore : "size";
+                if ("items" === showMoreType) {
+                    const showMoreTypeValue = showMoreContent.dataset.showmoreContent ? showMoreContent.dataset.showmoreContent : 3;
+                    const showMoreItems = showMoreContent.children;
+                    if (showMoreContent.children.length <= showMoreTypeValue) return;
+                    for (let index = 1; index < showMoreItems.length; index++) {
+                        const showMoreItem = showMoreItems[index - 1];
+                        hiddenHeight += showMoreItem.offsetHeight;
+                        if (index == showMoreTypeValue) break;
+                    }
+                } else if ("parag" === showMoreType) {
+                    const showMoreTypeValue = showMoreContent.dataset.showmoreContent ? showMoreContent.dataset.showmoreContent : 2;
+                    const showMoreItems = showMoreContent.children;
+                    if (showMoreContent.children.length <= showMoreTypeValue) return;
+                    for (let index = 1; index < showMoreItems.length; index++) {
+                        const showMoreItem = showMoreItems[index - 1];
+                        hiddenHeight += showMoreItem.offsetHeight;
+                        if (index == showMoreTypeValue) break;
+                    }
+                } else {
+                    const showMoreTypeValue = showMoreContent.dataset.showmoreContent ? showMoreContent.dataset.showmoreContent : 150;
+                    hiddenHeight = showMoreTypeValue;
+                }
+                return hiddenHeight;
+            }
+            function getOriginalHeight(showMoreContent) {
+                let parentHidden;
+                let hiddenHeight = showMoreContent.offsetHeight;
+                showMoreContent.style.removeProperty("height");
+                if (showMoreContent.closest(`[hidden]`)) {
+                    parentHidden = showMoreContent.closest(`[hidden]`);
+                    parentHidden.hidden = false;
+                }
+                let originalHeight = showMoreContent.offsetHeight;
+                parentHidden ? parentHidden.hidden = true : null;
+                showMoreContent.style.height = `${hiddenHeight}px`;
+                return originalHeight;
+            }
+            function showMoreActions(e) {
+                const targetEvent = e.target;
+                const targetType = e.type;
+                if ("click" === targetType) {
+                    if (targetEvent.closest("[data-showmore-button]")) {
+                        const showMoreButton = targetEvent.closest("[data-showmore-button]");
+                        const showMoreBlock = showMoreButton.closest("[data-showmore]");
+                        const showMoreContent = showMoreBlock.querySelector("[data-showmore-content]");
+                        const showMoreSpeed = showMoreBlock.dataset.showmoreButton ? showMoreBlock.dataset.showmoreButton : "500";
+                        const hiddenHeight = getHeight(showMoreBlock, showMoreContent);
+                        if (!showMoreContent.classList.contains("_slide")) {
+                            showMoreBlock.classList.contains("_showmore-active") ? _slideUp(showMoreContent, showMoreSpeed, hiddenHeight) : _slideDown(showMoreContent, showMoreSpeed, hiddenHeight);
+                            showMoreBlock.classList.toggle("_showmore-active");
+                        }
+                    }
+                } else if ("resize" === targetType) {
+                    showMoreBlocksRegular && showMoreBlocksRegular.length ? initItems(showMoreBlocksRegular) : null;
+                    mdQueriesArray && mdQueriesArray.length ? initItemsMedia(mdQueriesArray) : null;
+                }
+            }
         }
         function functions_FLS(message) {
             setTimeout((() => {
@@ -9586,19 +9611,36 @@
                 let priceCnt = rangeSlider.closest(".price");
                 let textFrom = parseInt(rangeSlider.getAttribute("data-from"));
                 let textTo = parseInt(rangeSlider.getAttribute("data-to"));
+                const input0 = priceCnt.querySelector(".js_input-from");
+                const input1 = priceCnt.querySelector(".js_input-to");
+                const inputs = [ input0, input1 ];
+                let start = [ textFrom, textTo ];
+                if (input0.value.length) {
+                    var current = parseFloat(input0.value.trim());
+                    if (current > textFrom) start[0] = current;
+                }
+                if (input1.value.length) {
+                    current = parseFloat(input1.value.trim());
+                    if (current < textTo) start[1] = current;
+                }
                 nouislider.create(rangeSlider, {
-                    start: [ textFrom, textTo ],
+                    start,
                     connect: true,
                     range: {
                         min: [ textFrom ],
                         max: [ textTo ]
                     }
                 });
-                const input0 = priceCnt.querySelector(".js_input-from");
-                const input1 = priceCnt.querySelector(".js_input-to");
-                const inputs = [ input0, input1 ];
                 rangeSlider.noUiSlider.on("update", (function(values, handle) {
                     inputs[handle].value = Math.round(values[handle]);
+                }));
+                var skipRecursiveBackward = false;
+                rangeSlider.noUiSlider.on("end", (function(values, handle) {
+                    if (input0 && input1) {
+                        skipRecursiveBackward = true;
+                        inputs[handle].dispatchEvent(new Event("change"));
+                        inputs[handle].dispatchEvent(new Event("keyup"));
+                    }
                 }));
                 const setRangeSlider = (i, value) => {
                     let arr = [ null, null ];
@@ -9607,13 +9649,19 @@
                 };
                 inputs.forEach(((el, index) => {
                     el.addEventListener("change", (e => {
+                        if (skipRecursiveBackward) {
+                            skipRecursiveBackward = false;
+                            return;
+                        }
                         setRangeSlider(index, e.currentTarget.value);
                     }));
                 }));
             }
         }
-        rangeInit(document.querySelector("#range"));
-        rangeInit(document.querySelector("#popup-range"));
+        const rangesSlidersFilters = document.querySelectorAll("#range");
+        rangesSlidersFilters.forEach((range => {
+            rangeInit(range);
+        }));
         function getWindow_getWindow(node) {
             if (null == node) return window;
             if ("[object Window]" !== node.toString()) {
@@ -16649,12 +16697,6 @@
         };
         SimpleBar.getOptions = getOptions;
         if (can_use_dom_default()) SimpleBar.initHtmlApi();
-        var lazyload_min = __webpack_require__(2732);
-        new lazyload_min({
-            elements_selector: ".product-card__image-ibg img, .main-catalog__image-ibg img, .banner-catalog__image-ibg img, .menu-banner__image-ibg img",
-            class_loaded: "_lazy-loaded",
-            use_native: true
-        });
         let addWindowScrollEvent = false;
         function stickyBlock() {
             addWindowScrollEvent = true;
@@ -19482,7 +19524,9 @@
             }
         };
         const da = new DynamicAdapt("max");
-        da.init();
+        window.addEventListener("load", (() => {
+            da.init();
+        }));
         !function(t, e) {
             "object" == typeof exports && "undefined" != typeof module ? module.exports = e(require("jquery")) : "function" == typeof define && define.amd ? define([ "jquery" ], e) : (t = t || self).parsley = e(t.jQuery);
         }(void 0, (function(h) {
