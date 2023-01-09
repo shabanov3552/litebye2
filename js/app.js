@@ -8369,7 +8369,35 @@
         if (filtersPopup) {
             filtersPopup.remove();
             document.querySelector(".wrapper").insertAdjacentElement("afterend", filtersPopup);
+            getFilterColumns(filtersPopup);
         }
+        function getFilterColumns(popup) {
+            const columns = popup.querySelectorAll(".filters__col");
+            const popupWrapper = popup.querySelector(".filters__wrapper");
+            columns.length > 1 ? popupWrapper.classList.add("many-cols") : null;
+        }
+        window.addEventListener("load", (function(e) {
+            var target = document.querySelector(".radio-buttons");
+            const config = {
+                attributes: true,
+                childList: true,
+                subtree: true
+            };
+            function styleButtonChange() {
+                const pickUpPointButtons = document.querySelectorAll(".radio-buttons__inner button, .radio-buttons__inner .btn");
+                pickUpPointButtons.forEach((btn => {
+                    btn.setAttribute("class", "");
+                    btn.style = "display: flex; justify-content:center; align-items: center; text-align: center;";
+                    btn.classList.add("btn__orange", "btn");
+                }));
+            }
+            styleButtonChange();
+            const callback = function(mutationsList, observer) {
+                for (let mutation of mutationsList) if ("childList" === mutation.type) styleButtonChange();
+            };
+            const observer = new MutationObserver(callback);
+            observer.observe(target, config);
+        }));
         function isWebp() {
             function testWebP(callback) {
                 let webP = new Image;
@@ -8904,7 +8932,7 @@
         class Popup {
             constructor(options) {
                 let config = {
-                    logging: true,
+                    logging: false,
                     init: true,
                     attributeOpenButton: "data-popup",
                     attributeCloseButton: "data-close",
@@ -8970,6 +8998,7 @@
                 };
                 this.bodyLock = false;
                 this.options.init ? this.initPopups() : null;
+                window.popup = this;
             }
             initPopups() {
                 this.popupLogging(`Проснулся`);
@@ -9145,7 +9174,8 @@
                 this.options.logging ? functions_FLS(`[Попапос]: ${message}`) : null;
             }
         }
-        modules_flsModules.popup = new Popup({});
+        let popup = new Popup({});
+        modules_flsModules.popup = popup;
         function formFieldsInit(options = {
             viewPass: false,
             autoHeight: false
@@ -9153,6 +9183,17 @@
             const formFields = document.querySelectorAll("input[placeholder],textarea[placeholder]");
             if (formFields.length) formFields.forEach((formField => {
                 if (!formField.hasAttribute("data-placeholder-nohide")) formField.dataset.placeholder = formField.placeholder;
+            }));
+            document.body.addEventListener("input", (function(e) {
+                const targetElement = e.target;
+                if ("INPUT" === targetElement.tagName || "TEXTAREA" === targetElement.tagName) {
+                    if (targetElement.dataset.placeholder) targetElement.placeholder = "";
+                    if (!targetElement.hasAttribute("data-no-focus-classes")) {
+                        targetElement.classList.add("_form-focus");
+                        targetElement.parentElement.classList.add("_form-focus");
+                        if (targetElement.parentElement.querySelector(".form__clear-svg")) targetElement.parentElement.querySelector(".form__clear-svg").classList.add("_active");
+                    }
+                }
             }));
             document.body.addEventListener("focusin", (function(e) {
                 const targetElement = e.target;
@@ -9192,6 +9233,7 @@
                         targetElement.parentElement.classList.remove("_form-focus");
                         targetElement.nextElementSibling.classList.remove("_active");
                     }
+                    if (targetElement.classList.contains("js_phone")) Inputmask.remove(targetElement);
                     if (targetElement.hasAttribute("data-validate")) formValidate.validateInput(targetElement);
                 }
             }));
@@ -11817,6 +11859,24 @@
         };
         breakpoint.addEventListener("change", breakpointChecker);
         breakpointChecker();
+        let favorBtn = document.querySelector(".product__btn-favorites") || Array.from(document.querySelectorAll(".item-basket__favorites"));
+        if (favorBtn) getFavorBtn(favorBtn);
+        function setFavoritTippy(btn) {
+            let favorBtnTippy = tippy_esm(btn);
+            favorBtnTippy.setContent("Добавить в избранное");
+            let btnsObserv = new MutationObserver((records => {
+                records[0].target.classList.forEach((item => {
+                    "_active" == item ? favorBtnTippy.setContent("Удалить из избранного") : favorBtnTippy.setContent("Добавить в избранное");
+                }));
+            }));
+            btnsObserv.observe(btn, {
+                subtree: true,
+                attributes: true
+            });
+        }
+        function getFavorBtn(node) {
+            Array.isArray(node) ? node.forEach((item => setFavoritTippy(item))) : setFavoritTippy(node);
+        }
         function isObject(obj) {
             return null !== obj && "object" === typeof obj && "constructor" in obj && obj.constructor === Object;
         }
@@ -15461,7 +15521,8 @@
             if (document.querySelector(".product-slider__slider")) {
                 const productSliders = document.querySelectorAll(".product-slider__slider");
                 let count = 1;
-                productSliders.forEach((el => {
+                productSliders.forEach(((el, i) => {
+                    if (i + 1 === productSliders.length) el.closest(".product-slider").classList.add("last-slider");
                     let className = "product-slider__slider-" + count;
                     let btnClassName = "product-slider__nav-btns-" + count;
                     el.closest(".product-slider").querySelector(".product-slider__nav-btns").classList.add(btnClassName);
